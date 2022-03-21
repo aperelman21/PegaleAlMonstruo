@@ -8,6 +8,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Game {
     private int maxScore;
@@ -15,14 +16,7 @@ public class Game {
     private MulticastSocket socket;
     private ArrayList<Player> players;
     private MulticastSocket msocket = null;
-
-    public int getMaxScore() {
-        return maxScore;
-    }
-
-    public void setMaxScore(int maxScore) {
-        this.maxScore = maxScore;
-    }
+    Random rand;
 
     public InetAddress getGroup() {
         return group;
@@ -30,18 +24,6 @@ public class Game {
 
     public void setGroup(InetAddress group) {
         this.group = group;
-    }
-
-    public MulticastSocket getSocket() {
-        return socket;
-    }
-
-    public void setSocket(MulticastSocket socket) {
-        this.socket = socket;
-    }
-
-    public ArrayList<Player> getPlayers() {
-        return players;
     }
 
     public void setPlayers(ArrayList<Player> players) {
@@ -83,16 +65,30 @@ public class Game {
     private Player getPlayerMaxScore(){
         Player maxPlayer = null, currentPlayer = null;
         int maxScore = 0, currentScore;
-        for (int i = 0; i < players.size(); i++){
+        for (int i = 0; i < players.size(); i++) {
             currentPlayer = players.get(i);
             currentScore = currentPlayer.getPlayerScore();
-            if (currentScore > maxScore){
+            if (currentScore > maxScore) {
                 maxScore = currentScore;
                 maxPlayer = currentPlayer;
             }
         }
-        return maxPlayer;
-    }
+            return maxPlayer;
+        }
+    public void sendMonster(){
+        int hole = rand.nextInt(16);
+        String message = String.valueOf(hole);
+        byte[] m = message.getBytes();
+        DatagramPacket messageOut =
+                new DatagramPacket(m, m.length, group, 49155);
+        try {
+            socket.send(messageOut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }//sendMonster
+
+
 
     public void sendWinner() throws IOException{
         Player winner = getPlayerMaxScore();
@@ -108,7 +104,4 @@ public class Game {
 
     }
 
-
-
-
-}
+}//Game
