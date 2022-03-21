@@ -70,6 +70,16 @@ public class Game {
         }
     }
 
+    public void endGame(){
+        try {
+            this.msocket.leaveGroup(group);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        this.msocket.close();
+    }
+
     private Player getPlayerMaxScore(){
         Player maxPlayer = null, currentPlayer = null;
         int maxScore = 0, currentScore;
