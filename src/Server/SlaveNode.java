@@ -2,15 +2,20 @@ package Server;
 
 import Interfaces.LoginRMI;
 import SerializableObjects.InfoPorts;
+import SerializableObjects.Player;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLOutput;
+import java.util.ArrayList;
 
 
 public class SlaveNode implements LoginRMI {
-
+    private String ip = "127.0.0.1";
+    private int port = 7896;
+    private ArrayList<Player> jugadores;
 
     public SlaveNode() throws RemoteException {
         super();
@@ -31,7 +36,14 @@ public class SlaveNode implements LoginRMI {
 
     @Override
     public InfoPorts getInfo(String player) throws RemoteException{
-        InfoPorts info = new InfoPorts(1,"0.0.0.0");
+        InfoPorts info = new InfoPorts(port,ip);
+        return info;
+    }
+
+    @Override
+    public InfoPorts userLogin(String idJugador) throws RemoteException{
+        System.out.println(this.port);
+        InfoPorts info = new InfoPorts(port, ip);
         return info;
     }
 
