@@ -52,7 +52,13 @@ public class Game {
         }
     }
 
-    public void endGame(){
+    public void GameOver() throws IOException{
+        Player winner = getPlayerMaxScore();
+        String victoryMsg = "Gana " + winner.getPlayerId();
+
+        byte[] m = victoryMsg.getBytes(); //enviamos la jugada a todos los jugadores activos
+        DatagramPacket messageOut = new DatagramPacket(m, m.length, group, 49155);
+        this.msocket.send(messageOut);
         try {
             this.msocket.leaveGroup(group);
 
@@ -74,7 +80,8 @@ public class Game {
             }
         }
             return maxPlayer;
-        }
+    }
+
     public void sendMonster(){
         int hole = rand.nextInt(16);
         String message = String.valueOf(hole);
@@ -88,20 +95,22 @@ public class Game {
         }
     }//sendMonster
 
+    public boolean isNewPlayer(Player newPlayer){
+        boolean resp;
+        resp = true;
+        Player player;
+        String newId = newPlayer.getPlayerId();
+        for (int i = 0; i < players.size(); i++) {
+            player = players.get(i);
+            if (player.getPlayerId().equals(newId)) {
+                resp = false;
+            }
+        }
+        return resp;
+    }
 
-
-    public void sendWinner() throws IOException{
-        Player winner = getPlayerMaxScore();
-        String victoryMsg = "Gana " + winner.getPlayerId();
-        ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-        ObjectOutput oo = new ObjectOutputStream(bStream);
-        oo.writeObject(victoryMsg);
-        oo.close();
-
-        byte[] m = bStream.toByteArray(); //enviamos la jugada a todos los jugadores activos
-        DatagramPacket messageOut = new DatagramPacket(m, m.length, this.getGroup(), 6789);
-        this.msocket.send(messageOut);
-
+    public void addPlayer(Player newPlayer){
+        this.players.add(newPlayer);
     }
 
 }//Game

@@ -4,6 +4,7 @@ import SerializableObjects.Player;
 
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 
 public class TCPServer extends Thread{
@@ -45,7 +46,9 @@ class Connection extends Thread {
     public void run() {
         try{
             player = (Player) in.readObject(); // recibimos el objeto de jugador que envia el cliente
-            boolean wantsOut = false;
+            if(game.isNewPlayer(player)){
+                game.addPlayer(player);
+            }
             Object dataIn;
             while(true){
                 dataIn = (Player) in.readObject();
