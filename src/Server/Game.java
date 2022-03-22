@@ -1,6 +1,7 @@
 package Server;
 
 import SerializableObjects.Player;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutput;
@@ -72,8 +73,8 @@ public class Game {
                 maxPlayer = currentPlayer;
             }
         }
-        return maxPlayer;
-    }
+            return maxPlayer;
+        }
     public void sendMonster(){
         int hole = rand.nextInt(16);
         String message = String.valueOf(hole);

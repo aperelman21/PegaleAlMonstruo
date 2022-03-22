@@ -1,5 +1,7 @@
 package Server;
 
+import SerializableObjects.Player;
+
 import java.net.*;
 import java.io.*;
 
@@ -23,15 +25,17 @@ public class TCPServer extends Thread{
 
 class Connection extends Thread {
 
-    private DataInputStream in;
-    private DataOutputStream out;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
     private Socket clientSocket;
+    private Game game;
+    private Player player;
 
     public Connection(Socket aClientSocket) {
         try {
             clientSocket = aClientSocket;
-            out = new DataOutputStream(clientSocket.getOutputStream());
-            in = new DataInputStream(clientSocket.getInputStream());
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
+            in = new ObjectInputStream(clientSocket.getInputStream());
         } catch (IOException e) {
             System.out.println("Connection:" + e.getMessage());
         }
@@ -39,6 +43,16 @@ class Connection extends Thread {
 
     @Override
     public void run() {
-
+        try{
+            player = (Player) in.readObject(); // recibimos el objeto de jugador que envia el cliente
+            boolean wantsOut = false;
+            Object dataIn;
+            while(true){
+                dataIn = (Player) in.readObject();
+            }//while
+        }//try
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }//run
 }//Connection
