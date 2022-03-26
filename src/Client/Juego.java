@@ -55,8 +55,19 @@ public class Juego extends JFrame {
         iniciaTimer();
     }
 
-    public Juego(String idPlayer,InfoPorts info){
+    public Juego(String idPlayer, String dirIP, int portTCP, int portUDP){
         this.player = new Player(idPlayer,0);
+        this.info = new InfoPorts(portTCP,portUDP,dirIP);
+        score = 0;
+        contadorTiempo = duracion;
+        init();
+        initConnection();
+        iniciaJuego();
+        iniciaTimer();
+    }
+
+    public Juego(Player player,InfoPorts info){
+        this.player = player;
         this.info = info;
         score = 0;
         contadorTiempo = duracion;
@@ -116,7 +127,7 @@ public class Juego extends JFrame {
     private void initConnection() {
         try {
             String serverIP = this.info.getDirIP();
-            int serverPort = this.info.getPort();
+            int serverPort = this.info.getPortTCP();
             socket = new Socket(serverIP,serverPort);
             out = new ObjectOutputStream(socket.getOutputStream());
         }
