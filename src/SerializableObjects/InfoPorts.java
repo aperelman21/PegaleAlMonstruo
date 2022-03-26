@@ -4,16 +4,22 @@ import java.io.Serializable;
 
 public class InfoPorts implements Serializable {
 
-    private int port;
+    private int portUDP;
+    private int portTCP;
     private String dirIP;
 
-    public InfoPorts(int port, String dirIP) {
-        this.port = port;
+    public InfoPorts(int portUDP, int portTCP, String dirIP) {
+        this.portUDP = portUDP;
+        this.portTCP = portTCP;
         this.dirIP = dirIP;
     }
 
-    public int getPort() {
-        return port;
+    public int getPortUDP() {
+        return portUDP;
+    }
+
+    public int getPortTCP() {
+        return portTCP;
     }
 
     public String getDirIP() {
