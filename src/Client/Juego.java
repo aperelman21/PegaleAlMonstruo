@@ -21,14 +21,14 @@ import java.util.concurrent.TimeUnit;
 import java.net.*;
 
 public class Juego extends JFrame {
-    public JButton btnTopos[] = new JButton[16];
-    public boolean tablero[] = new boolean[16];
+    public static JButton btnTopos[] = new JButton[16];
+    public static boolean tablero[] = new boolean[16];
     private JLabel lblScore;
     private JLabel lblTimeLeft;
     private ImageIcon topoInImg = new ImageIcon(getClass().getResource("moleIn.png"));
     private ImageIcon topoOutImg = new ImageIcon(getClass().getResource("moleOut.png"));
     private Icon topoInImgRedo;
-    private Icon topoOutImgRedo;
+    private static Icon topoOutImgRedo;
     public int score;
     private Timer timer;
     private final int duracion = 30;
@@ -42,6 +42,7 @@ public class Juego extends JFrame {
     private MulticastSocket socketUDP;
     private ObjectOutputStream out;
     private boolean juegoIniciado = true;
+    private TopoHilo topoHilo;
 
     public Juego() {
         score = 0;
@@ -49,10 +50,6 @@ public class Juego extends JFrame {
         init();
         iniciaJuego();
         iniciaTimer();
-    }
-
-    public Juego(String idPlayer,InfoPorts info){
-        this.info = info;
     }
 
     public Juego(String idPlayer){
@@ -63,17 +60,8 @@ public class Juego extends JFrame {
         initConnection();
         iniciaJuego();
         iniciaTimer();
-    }
-
-    public Juego(String idPlayer, String dirIP, int portTCP, int portUDP){
-        this.player = new Player(idPlayer,0);
-        this.info = new InfoPorts(portTCP,portUDP,dirIP);
-        score = 0;
-        contadorTiempo = duracion;
-        init();
-        initConnection();
-        iniciaJuego();
-        iniciaTimer();
+        topoHilo = new TopoHilo(socketUDP);
+        topoHilo.start();
     }
 
     public Juego(Player player,InfoPorts info) throws IOException {
@@ -85,7 +73,9 @@ public class Juego extends JFrame {
         init();
         //initConnection();
         iniciaJuego();
-        iniciaTimer();
+        // iniciaTimer();
+        topoHilo = new TopoHilo(socketUDP);
+        topoHilo.start();
     }
 
     public void joinMultiCast(int portUDP) throws IOException {
@@ -167,8 +157,14 @@ public class Juego extends JFrame {
         return new ImageIcon(resizedImage);
     }
 
-    private int creaRandTopo() {
+    public int creaRandTopo() {
         int topoID = new Random(System.currentTimeMillis()).nextInt(16);
+        tablero[topoID] = true;
+        btnTopos[topoID].setIcon(topoOutImgRedo);
+        return topoID;
+    }
+
+    public static int creaTopo(int topoID) {
         tablero[topoID] = true;
         btnTopos[topoID].setIcon(topoOutImgRedo);
         return topoID;
@@ -229,8 +225,6 @@ public class Juego extends JFrame {
 
             });
         }
-
-
     }
 
     private void gameOver() {
@@ -252,23 +246,10 @@ public class Juego extends JFrame {
         Runnable topoTask = new Runnable() {
             int topoID = -1;
             public void run() {
-                System.out.println("inicia leer mensaje");
-                byte[] buffer = new byte[1000];
-                DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length);
-                while(true){
-                    try {
-                        socketUDP.receive(messageIn);
-                        ByteArrayInputStream b = new ByteArrayInputStream(messageIn.getData());
-                        ObjectInputStream stream = new ObjectInputStream(b);
-                        UDPMessage message = (UDPMessage) stream.readObject();
-                        System.out.println("hoyo:" + message.getHole());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                if (topoID != -1) {
+                    limpiaTopo(topoID);
                 }
-
+                topoID = creaRandTopo();
             }
         };
         executor = Executors.newScheduledThreadPool(1);
@@ -292,6 +273,5 @@ public class Juego extends JFrame {
     public static void main(String[] args) {
         Juego juego = new Juego("Jugador1");
         juego.setVisible(true);
-        //juego.iniciaTimer();
     }
 }
