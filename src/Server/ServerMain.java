@@ -9,6 +9,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class ServerMain {
 
 
+
     public static void main(String[] args) throws RemoteException {
 
         System.setProperty("java.security.policy", "src/Server/server.policy");
@@ -16,6 +17,7 @@ public class ServerMain {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }//if
+        //Desplegar servicio RMI
         try {
             String serverAddress = "192.168.1.72";
             System.setProperty("java.rmi.server.hostname", serverAddress);
@@ -28,7 +30,6 @@ public class ServerMain {
             System.err.println("ComputeEngine exception");
             e.printStackTrace();
         }//catch
-
 
 
 

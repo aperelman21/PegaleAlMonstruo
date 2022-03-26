@@ -18,26 +18,6 @@ public class Game {
     private MulticastSocket msocket = null;
     Random rand;
 
-    public InetAddress getGroup() {
-        return group;
-    }
-
-    public void setGroup(InetAddress group) {
-        this.group = group;
-    }
-
-    public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
-    }
-
-    public MulticastSocket getMsocket() {
-        return msocket;
-    }
-
-    public void setMsocket(MulticastSocket msocket) {
-        this.msocket = msocket;
-    }
-
     public void initialize(){
         try {
             this.group = InetAddress.getByName("228.5.6.7"); //destination multicast group
@@ -107,6 +87,17 @@ public class Game {
             }
         }
         return resp;
+    }
+
+    public void updateScore(Player player1){
+        Player player2;
+        for (int i = 0; i < players.size(); i++) {
+            player2 = players.get(i);
+            String player2ID = player2.getPlayerId();
+            if (player1.getPlayerId().equals(player2ID)) {
+                players.set(i,player1);
+            }
+        }
     }
 
     public void addPlayer(Player newPlayer){

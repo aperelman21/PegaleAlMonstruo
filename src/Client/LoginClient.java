@@ -31,7 +31,7 @@ public class LoginClient extends JFrame{
                     InfoPorts info = login.getInfo(idPlayer);
                     Juego juego = new Juego(idPlayer,info);
                     juego.setVisible(true);
-                    System.out.println("Me llego por RMI: direccion IP: "+info.getDirIP() + " puerto: "+ info.getPort());
+                    System.out.println("Me llego por RMI: direccion IP: "+info.getDirIP() + " puertoUDP: "+ info.getPortUDP()+ " puertoTCP: "+ info.getPortTCP());
                     mainPanel.setVisible(false);
 
                 } catch (IOException exception){

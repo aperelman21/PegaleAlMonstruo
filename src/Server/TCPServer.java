@@ -9,13 +9,16 @@ import java.util.ArrayList;
 
 public class TCPServer extends Thread{
 
+    private Game game;
+
     public void run(){
         try {
             int serverPort = 49152;
             ServerSocket listenSocket = new ServerSocket(serverPort);
+            game = new Game();
             while (true) {
                 Socket clientSocket = listenSocket.accept();  // Listens for a connection to be made to this socket and accepts it. The method blocks until a connection is made.
-                Connection c = new Connection(clientSocket);
+                Connection c = new Connection(clientSocket,game);
                 c.start();
             }
         } catch (IOException e) {
@@ -32,11 +35,12 @@ class Connection extends Thread {
     private Game game;
     private Player player;
 
-    public Connection(Socket aClientSocket) {
+    public Connection(Socket aClientSocket,Game game) {
         try {
             clientSocket = aClientSocket;
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             in = new ObjectInputStream(clientSocket.getInputStream());
+            this.game = game;
         } catch (IOException e) {
             System.out.println("Connection:" + e.getMessage());
         }
@@ -49,9 +53,10 @@ class Connection extends Thread {
             if(game.isNewPlayer(player)){
                 game.addPlayer(player);
             }
-            Object dataIn;
+            Player player;
             while(true){
-                dataIn = (Player) in.readObject();
+                player = (Player) in.readObject();
+                game.updateScore(player);
             }//while
         }//try
         catch(Exception e){
