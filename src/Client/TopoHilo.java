@@ -24,13 +24,20 @@ public class TopoHilo extends Thread {
                     try {
                         DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length);
                         socketUDP.receive(messageIn);
-                        System.out.println("Message: " + new String(messageIn.getData()).trim());
+                        if (topoID>=0) {
+                            Juego.limpiaTopo(topoID);
+                        }
+                        String msjRecibido = new String(messageIn.getData()).trim();
+                        System.out.println("Message: " + msjRecibido);
                         //ByteArrayInputStream b = new ByteArrayInputStream(messageIn.getData());
                         //ObjectInputStream stream = new ObjectInputStream(b);
                         //UDPMessage message = (UDPMessage) stream.readObject();
-                        //topoID = message.getHole();
+                        topoID = Integer.parseInt(msjRecibido);
                         //System.out.println("hoyo:" + topoID);
-                        //Juego.creaTopo(topoID);
+                        if (topoID > 15) {
+                            topoID = 15;
+                        }
+                        Juego.creaTopo(topoID);
                     } catch (Exception e) {
                         e.printStackTrace();
                     //} catch (ClassNotFoundException e) {

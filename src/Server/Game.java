@@ -89,7 +89,8 @@ public class Game {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-        String myMessage = "Hello";
+        String myMessage = Integer.toString(hole);
+        System.out.println("Hoyo Enviado: " + hole);
         byte[] m = myMessage.getBytes();
         DatagramPacket messageOut =
                 new DatagramPacket(m, m.length, group, 49155);

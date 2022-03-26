@@ -27,7 +27,7 @@ public class Juego extends JFrame {
     private JLabel lblTimeLeft;
     private ImageIcon topoInImg = new ImageIcon(getClass().getResource("moleIn.png"));
     private ImageIcon topoOutImg = new ImageIcon(getClass().getResource("moleOut.png"));
-    private Icon topoInImgRedo;
+    private static Icon topoInImgRedo;
     private static Icon topoOutImgRedo;
     public int score;
     private Timer timer;
@@ -71,7 +71,7 @@ public class Juego extends JFrame {
         contadorTiempo = duracion;
         joinMultiCast(info.getPortUDP());
         init();
-        //initConnection();
+        initConnection();
         iniciaJuego();
         // iniciaTimer();
         topoHilo = new TopoHilo(this.socketUDP);
@@ -237,7 +237,7 @@ public class Juego extends JFrame {
         juegoIniciado = false;
     }
 
-    private void limpiaTopo(int topoID) {
+    public static void limpiaTopo(int topoID) {
         tablero[topoID] = false;
         btnTopos[topoID].setIcon(topoInImgRedo);
     }

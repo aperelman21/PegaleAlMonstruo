@@ -21,7 +21,7 @@ public class ServerMain {
         }//if
         //Desplegar servicio RMI
         try {
-            String serverAddress = "192.168.1.72";
+            String serverAddress = "192.168.100.87";
             System.setProperty("java.rmi.server.hostname", serverAddress);
 
             // start the rmi registry

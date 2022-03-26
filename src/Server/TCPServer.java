@@ -51,6 +51,7 @@ class Connection extends Thread {
 
     @Override
     public void run() {
+        System.out.println("Entra al Run del TCPServer");
         try{
             player = (Player) in.readObject(); // recibimos el objeto de jugador que envia el cliente
             if(game.isNewPlayer(player)){
@@ -59,6 +60,7 @@ class Connection extends Thread {
             Player player;
             while(true){
                 player = (Player) in.readObject();
+                System.out.println(player.getPlayerId());
                 game.updateScore(player);
             }//while
         }//try
