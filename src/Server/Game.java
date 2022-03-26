@@ -77,18 +77,23 @@ public class Game {
             return maxPlayer;
     }
 
-    public void sendMonster(){
+    public void sendMonster() throws IOException {
         int hole = rand.nextInt(16);
-        UDPMessage message = new UDPMessage(hole,false,null);
+        /*UDPMessage message = new UDPMessage(hole,false,null);
         ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-        ObjectOutput oo = null;
+        ObjectOutputStream oos = null;
         try {
-            oo = new ObjectOutputStream(bStream);
-            oo.writeObject(message);
+            oos = new ObjectOutputStream(bStream);
+            oos.writeObject(message);
             System.out.println("Envio un mosnturo al hoyo: "+ hole);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+        String myMessage = "Hello";
+        byte[] m = myMessage.getBytes();
+        DatagramPacket messageOut =
+                new DatagramPacket(m, m.length, group, 49155);
+        socket.send(messageOut);
     }//sendMonster
 
     public boolean isNewPlayer(Player newPlayer){

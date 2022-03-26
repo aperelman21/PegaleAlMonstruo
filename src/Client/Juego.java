@@ -74,14 +74,14 @@ public class Juego extends JFrame {
         //initConnection();
         iniciaJuego();
         // iniciaTimer();
-        topoHilo = new TopoHilo(socketUDP);
+        topoHilo = new TopoHilo(this.socketUDP);
         topoHilo.start();
     }
 
     public void joinMultiCast(int portUDP) throws IOException {
         try {
             InetAddress group = InetAddress.getByName("228.5.6.7"); // destination multicast group
-            socketUDP = new MulticastSocket(portUDP);
+            this.socketUDP = new MulticastSocket(portUDP);
             socketUDP.joinGroup(group);
         } catch (SocketException e) {
             System.out.println("Socket: " + e.getMessage());
