@@ -9,13 +9,16 @@ import java.util.ArrayList;
 
 public class TCPServer extends Thread{
 
-    private Game game;
+    private Game game = new Game();
+
+    public Game getGame() {
+        return game;
+    }
 
     public void run(){
         try {
             int serverPort = 49152;
             ServerSocket listenSocket = new ServerSocket(serverPort);
-            game = new Game();
             while (true) {
                 Socket clientSocket = listenSocket.accept();  // Listens for a connection to be made to this socket and accepts it. The method blocks until a connection is made.
                 Connection c = new Connection(clientSocket,game);

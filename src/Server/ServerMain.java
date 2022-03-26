@@ -1,5 +1,6 @@
 package Server;
 import Interfaces.LoginRMI;
+import SerializableObjects.Player;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -10,7 +11,7 @@ public class ServerMain {
 
 
 
-    public static void main(String[] args) throws RemoteException {
+    public static void main(String[] args) throws RemoteException, InterruptedException {
 
         System.setProperty("java.security.policy", "src/Server/server.policy");
 
@@ -30,6 +31,26 @@ public class ServerMain {
             System.err.println("ComputeEngine exception");
             e.printStackTrace();
         }//catch
+
+        //Instanciar servidor TCP y empezar el jeugo
+        TCPServer servTCP = new TCPServer();
+        servTCP.start();
+        Game game = servTCP.getGame();
+        //Instanciar grupo multicast
+        game.initialize();
+        boolean flag = true;
+        Player maxPlayer;
+        int maxScore = game.getMaxScore();
+        while(flag){
+
+            game.sendMonster();
+            Thread.sleep(1000);
+            //Checar si alguien ya gano
+            maxPlayer = game.getPlayerMaxScore();
+            if(maxPlayer.getPlayerScore()==maxScore){
+                flag = false;
+            }
+        }
 
 
 

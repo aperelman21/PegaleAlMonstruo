@@ -16,7 +16,13 @@ public class Game {
     private MulticastSocket socket;
     private ArrayList<Player> players;
     private MulticastSocket msocket = null;
-    Random rand;
+    Random rand = new Random();
+    public Game() {
+    }
+
+    public int getMaxScore() {
+        return maxScore;
+    }
 
     public void initialize(){
         try {
@@ -25,6 +31,9 @@ public class Game {
             this.socket.joinGroup(group);
 
             this.maxScore = 5;
+            Player defaultP = new Player("Server",1);
+            players = new ArrayList<Player>();
+            players.add(defaultP);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -48,7 +57,7 @@ public class Game {
         this.msocket.close();
     }
 
-    private Player getPlayerMaxScore(){
+    public Player getPlayerMaxScore(){
         Player maxPlayer = null, currentPlayer = null;
         int maxScore = 0, currentScore;
         for (int i = 0; i < players.size(); i++) {
@@ -70,6 +79,7 @@ public class Game {
                 new DatagramPacket(m, m.length, group, 49155);
         try {
             socket.send(messageOut);
+            System.out.println("Envio un mosnturo al hoyo: "+ message);
         } catch (IOException e) {
             e.printStackTrace();
         }
