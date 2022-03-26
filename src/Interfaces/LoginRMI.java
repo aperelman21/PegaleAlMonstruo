@@ -8,6 +8,5 @@ import java.rmi.RemoteException;
 public interface LoginRMI extends Remote{
 
     public InfoPorts getInfo(String player) throws RemoteException;
-    public InfoPorts userLogin(String idJugador) throws RemoteException;
 
 }

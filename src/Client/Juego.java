@@ -1,4 +1,6 @@
 package Client;
+import SerializableObjects.InfoPorts;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -27,12 +29,22 @@ public class Juego extends JFrame {
     private final int topoHeight = 132;
     private int contadorTiempo;
     private ScheduledExecutorService executor;
+    private String idPlayer;
+    private InfoPorts info;
 
     public Juego() {
         score = 0;
         contadorTiempo = duracion;
         init();
         iniciaJuego();
+    }
+
+    public Juego(String idPlayer,InfoPorts info){
+        this.idPlayer = idPlayer;
+        this.info = info;
+        init();
+        iniciaJuego();
+        iniciaTimer();
     }
 
     public void init() {
@@ -189,9 +201,9 @@ public class Juego extends JFrame {
 
     }
 
-    public static void main(String[] args) {
-        Juego juego = new Juego();
-        juego.setVisible(true);
-        juego.iniciaTimer();
-    }
+    //public static void main(String[] args) {
+      //  Juego juego = new Juego();
+        //juego.setVisible(true);
+        //juego.iniciaTimer();
+    //}
 }

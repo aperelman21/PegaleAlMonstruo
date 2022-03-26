@@ -40,11 +40,4 @@ public class SlaveNode implements LoginRMI {
         return info;
     }
 
-    @Override
-    public InfoPorts userLogin(String idJugador) throws RemoteException{
-        System.out.println(this.port);
-        InfoPorts info = new InfoPorts(port, ip);
-        return info;
-    }
-
 }//class
