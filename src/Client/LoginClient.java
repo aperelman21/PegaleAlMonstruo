@@ -29,7 +29,7 @@ public class LoginClient extends JFrame{
                 try{
                     String idPlayer = textField1.getText();
                     InfoPorts info = login.getInfo(idPlayer);
-                    JuegoGUI game = new JuegoGUI();
+                    //JuegoGUI game = new JuegoGUI();
                     System.out.println(info.getDirIP());
                     mainPanel.setVisible(false);
 
