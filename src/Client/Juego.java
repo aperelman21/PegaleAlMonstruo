@@ -6,6 +6,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Random;
 import java.util.Timer;
@@ -45,6 +46,10 @@ public class Juego extends JFrame {
         iniciaTimer();
     }
 
+    public Juego(String idPlayer,InfoPorts info){
+        this.info = info;
+    }
+
     public Juego(String idPlayer){
         this.player = new Player(idPlayer,0);
         score = 0;
@@ -71,10 +76,26 @@ public class Juego extends JFrame {
         this.info = info;
         score = 0;
         contadorTiempo = duracion;
+        joinMultiCast(info.getPortUDP());
         init();
-        initConnection();
+        //initConnection();
         iniciaJuego();
         iniciaTimer();
+    }
+
+    public void joinMultiCast(int portUDP){
+        MulticastSocket socket = null;
+        try {
+            InetAddress group = InetAddress.getByName("228.5.6.7"); // destination multicast group
+            socket = new MulticastSocket(portUDP);
+            socket.joinGroup(group);
+        } catch (SocketException e) {
+            System.out.println("Socket: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IO: " + e.getMessage());
+        } finally {
+            if (socket != null) socket.close();
+        }
     }
 
     public void init() {

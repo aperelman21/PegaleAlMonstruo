@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.*;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -73,13 +74,12 @@ public class Game {
 
     public void sendMonster(){
         int hole = rand.nextInt(16);
-        String message = String.valueOf(hole);
-        byte[] m = message.getBytes();
+        byte[] buf = ByteBuffer.allocate(Integer.BYTES).putInt(hole).array();
         DatagramPacket messageOut =
-                new DatagramPacket(m, m.length, group, 49155);
+                new DatagramPacket(buf,buf.length, group, 49155);
         try {
             socket.send(messageOut);
-            System.out.println("Envio un mosnturo al hoyo: "+ message);
+            System.out.println("Envio un mosnturo al hoyo: "+ hole);
         } catch (IOException e) {
             e.printStackTrace();
         }

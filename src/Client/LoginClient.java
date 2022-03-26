@@ -2,6 +2,7 @@ package Client;
 
 import Interfaces.LoginRMI;
 import SerializableObjects.InfoPorts;
+import SerializableObjects.Player;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -29,9 +30,11 @@ public class LoginClient extends JFrame{
                 try{
                     String idPlayer = textField1.getText();
                     InfoPorts info = login.getInfo(idPlayer);
-                    Juego juego = new Juego(idPlayer,info);
-                    juego.setVisible(true);
                     System.out.println("Me llego por RMI: direccion IP: "+info.getDirIP() + " puertoUDP: "+ info.getPortUDP()+ " puertoTCP: "+ info.getPortTCP());
+                    Player player = new Player(idPlayer,0);
+                    Juego juego = new Juego(player,info);
+                    System.out.println("si se creo el jeugo");
+                    juego.setVisible(true);
                     mainPanel.setVisible(false);
 
                 } catch (IOException exception){
