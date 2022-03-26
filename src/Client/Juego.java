@@ -1,12 +1,16 @@
 package Client;
 import SerializableObjects.InfoPorts;
 import SerializableObjects.Player;
+import SerializableObjects.UDPMessage;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Random;
 import java.util.Timer;
@@ -34,7 +38,8 @@ public class Juego extends JFrame {
     private ScheduledExecutorService executor;
     private Player player;
     private InfoPorts info;
-    private Socket socket;
+    private Socket socketTCP;
+    private MulticastSocket socketUDP;
     private ObjectOutputStream out;
     private boolean juegoIniciado = true;
 
@@ -71,7 +76,7 @@ public class Juego extends JFrame {
         iniciaTimer();
     }
 
-    public Juego(Player player,InfoPorts info){
+    public Juego(Player player,InfoPorts info) throws IOException {
         this.player = player;
         this.info = info;
         score = 0;
@@ -83,18 +88,17 @@ public class Juego extends JFrame {
         iniciaTimer();
     }
 
-    public void joinMultiCast(int portUDP){
-        MulticastSocket socket = null;
+    public void joinMultiCast(int portUDP) throws IOException {
         try {
             InetAddress group = InetAddress.getByName("228.5.6.7"); // destination multicast group
-            socket = new MulticastSocket(portUDP);
-            socket.joinGroup(group);
+            socketUDP = new MulticastSocket(portUDP);
+            socketUDP.joinGroup(group);
         } catch (SocketException e) {
             System.out.println("Socket: " + e.getMessage());
         } catch (IOException e) {
             System.out.println("IO: " + e.getMessage());
         } finally {
-            if (socket != null) socket.close();
+            if (socketTCP != null) socketTCP.close();
         }
     }
 
@@ -149,8 +153,8 @@ public class Juego extends JFrame {
         try {
             String serverIP = this.info.getDirIP();
             int serverPort = this.info.getPortTCP();
-            socket = new Socket(serverIP,serverPort);
-            out = new ObjectOutputStream(socket.getOutputStream());
+            socketTCP = new Socket(serverIP,serverPort);
+            out = new ObjectOutputStream(socketTCP.getOutputStream());
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -248,10 +252,23 @@ public class Juego extends JFrame {
         Runnable topoTask = new Runnable() {
             int topoID = -1;
             public void run() {
-                if (topoID != -1) {
-                    limpiaTopo(topoID);
+                System.out.println("inicia leer mensaje");
+                byte[] buffer = new byte[1000];
+                DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length);
+                while(true){
+                    try {
+                        socketUDP.receive(messageIn);
+                        ByteArrayInputStream b = new ByteArrayInputStream(messageIn.getData());
+                        ObjectInputStream stream = new ObjectInputStream(b);
+                        UDPMessage message = (UDPMessage) stream.readObject();
+                        System.out.println("hoyo:" + message.getHole());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
-                topoID = creaRandTopo();
+
             }
         };
         executor = Executors.newScheduledThreadPool(1);

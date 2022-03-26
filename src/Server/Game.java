@@ -1,6 +1,7 @@
 package Server;
 
 import SerializableObjects.Player;
+import SerializableObjects.UDPMessage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -74,11 +75,12 @@ public class Game {
 
     public void sendMonster(){
         int hole = rand.nextInt(16);
-        byte[] buf = ByteBuffer.allocate(Integer.BYTES).putInt(hole).array();
-        DatagramPacket messageOut =
-                new DatagramPacket(buf,buf.length, group, 49155);
+        UDPMessage message = new UDPMessage(hole,false,null);
+        ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+        ObjectOutput oo = null;
         try {
-            socket.send(messageOut);
+            oo = new ObjectOutputStream(bStream);
+            oo.writeObject(message);
             System.out.println("Envio un mosnturo al hoyo: "+ hole);
         } catch (IOException e) {
             e.printStackTrace();
