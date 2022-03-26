@@ -44,12 +44,16 @@ public class Game {
     }
 
     public void GameOver() throws IOException{
-        Player winner = getPlayerMaxScore();
-        String victoryMsg = "Gana " + winner.getPlayerId();
-
-        byte[] m = victoryMsg.getBytes(); //enviamos la jugada a todos los jugadores activos
-        DatagramPacket messageOut = new DatagramPacket(m, m.length, group, 49155);
-        this.msocket.send(messageOut);
+        UDPMessage message = new UDPMessage(0,true,getPlayerMaxScore());
+        ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+        ObjectOutput oo = null;
+        try {
+            oo = new ObjectOutputStream(bStream);
+            oo.writeObject(message);
+            System.out.println("Envio el ganador!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try {
             this.msocket.leaveGroup(group);
 
