@@ -2,6 +2,7 @@ package Server;
 import Interfaces.LoginRMI;
 import SerializableObjects.Player;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -11,7 +12,7 @@ public class ServerMain {
 
 
 
-    public static void main(String[] args) throws RemoteException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         System.setProperty("java.security.policy", "src/Server/server.policy");
 
@@ -41,20 +42,17 @@ public class ServerMain {
         boolean flag = true;
         Player maxPlayer;
         int maxScore = game.getMaxScore();
+        //mientras nadie haya ganado, enviamos monstruos por multicast
         while(flag){
-
             game.sendMonster();
             Thread.sleep(1000);
             //Checar si alguien ya gano
             maxPlayer = game.getPlayerMaxScore();
-            if(maxPlayer.getPlayerScore()==maxScore){
+            if(maxPlayer.getPlayerScore()==maxScore) {
                 flag = false;
             }
         }
-
-
-
-
-
+        //Cuando alguien ya gano enviamos al ganador
+        game.GameOver();
     }//main
 }//class
