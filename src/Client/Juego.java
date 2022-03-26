@@ -1,17 +1,19 @@
 package Client;
 import SerializableObjects.InfoPorts;
-
+import SerializableObjects.Player;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.ObjectOutputStream;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.net.*;
 
 public class Juego extends JFrame {
     public JButton btnTopos[] = new JButton[16];
@@ -29,20 +31,37 @@ public class Juego extends JFrame {
     private final int topoHeight = 132;
     private int contadorTiempo;
     private ScheduledExecutorService executor;
-    private String idPlayer;
+    private Player player;
     private InfoPorts info;
+    private Socket socket;
+    private ObjectOutputStream out;
+    private boolean juegoIniciado = true;
 
     public Juego() {
         score = 0;
         contadorTiempo = duracion;
         init();
         iniciaJuego();
+        iniciaTimer();
+    }
+
+    public Juego(String idPlayer){
+        this.player = new Player(idPlayer,0);
+        score = 0;
+        contadorTiempo = duracion;
+        init();
+        initConnection();
+        iniciaJuego();
+        iniciaTimer();
     }
 
     public Juego(String idPlayer,InfoPorts info){
-        this.idPlayer = idPlayer;
+        this.player = new Player(idPlayer,0);
         this.info = info;
+        score = 0;
+        contadorTiempo = duracion;
         init();
+        initConnection();
         iniciaJuego();
         iniciaTimer();
     }
@@ -94,6 +113,18 @@ public class Juego extends JFrame {
         setContentPane(contentPanel);
     }
 
+    private void initConnection() {
+        try {
+            String serverIP = this.info.getDirIP();
+            int serverPort = this.info.getPort();
+            socket = new Socket(serverIP,serverPort);
+            out = new ObjectOutputStream(socket.getOutputStream());
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private static Icon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
         Image img = icon.getImage();
         Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight,  java.awt.Image.SCALE_SMOOTH);
@@ -108,15 +139,20 @@ public class Juego extends JFrame {
     }
 
     private void clickTopo(int topoID) {
-        if (tablero[topoID]) {
-            score++;
-            btnTopos[topoID].setIcon(topoInImgRedo);
-            tablero[topoID] = false;
-            lblScore.setText(String.valueOf(score));
-        }
-        else {
-            score--;
-            lblScore.setText(String.valueOf(score));
+        if (juegoIniciado) {
+            if (tablero[topoID]) {
+                score++;
+                this.player.setPlayerScore(score);
+                btnTopos[topoID].setIcon(topoInImgRedo);
+                tablero[topoID] = false;
+                lblScore.setText(String.valueOf(score));
+                try {
+                    out.writeObject(this.player);
+                }
+                catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
     }
 
@@ -165,13 +201,16 @@ public class Juego extends JFrame {
         contadorTiempo = duracion;
         executor.shutdown();
         timer.cancel();
+        for (int i=0; i<btnTopos.length; i++) {
+            btnTopos[i].setIcon(topoInImgRedo);
+        }
+        juegoIniciado = false;
     }
 
     private void limpiaTopo(int topoID) {
         tablero[topoID] = false;
         btnTopos[topoID].setIcon(topoInImgRedo);
     }
-
 
     private void iniciaTimer() {
         Runnable topoTask = new Runnable() {
@@ -201,9 +240,9 @@ public class Juego extends JFrame {
 
     }
 
-    //public static void main(String[] args) {
-      //  Juego juego = new Juego();
-        //juego.setVisible(true);
+    public static void main(String[] args) {
+        Juego juego = new Juego("Jugador1");
+        juego.setVisible(true);
         //juego.iniciaTimer();
-    //}
+    }
 }
