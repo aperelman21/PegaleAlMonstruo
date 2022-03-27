@@ -9,18 +9,26 @@ import java.util.ArrayList;
 
 public class TCPServer extends Thread{
 
+    public TCPServer(){
+        super();
+    }//builder
+
     private Game game = new Game();
 
     public Game getGame() {
         return game;
     }
 
+    @Override
     public void run(){
         try {
+            System.out.println("entra a tcpServer");
             int serverPort = 49152;
             ServerSocket listenSocket = new ServerSocket(serverPort);
             while (true) {
+                System.out.println("antes accept");
                 Socket clientSocket = listenSocket.accept();  // Listens for a connection to be made to this socket and accepts it. The method blocks until a connection is made.
+                System.out.println("despues accept");
                 Connection c = new Connection(clientSocket,game);
                 c.start();
             }

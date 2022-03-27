@@ -56,7 +56,7 @@ public class LoginClient extends JFrame{
         }
         try {
             //String serverAddress = "?.?.?.?";
-            String serverAddress = "192.168.1.72";
+            String serverAddress = "192.168.15.6";
             String serviceName = "LoginRMI";
             Registry registry = LocateRegistry.getRegistry(serverAddress); // server's ip address args[0]
             login = (LoginRMI) registry.lookup(serviceName);
