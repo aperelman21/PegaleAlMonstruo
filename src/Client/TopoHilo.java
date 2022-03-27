@@ -36,17 +36,18 @@ public class TopoHilo extends Thread {
                         //ByteArrayInputStream b = new ByteArrayInputStream(messageIn.getData());
                         //ObjectInputStream stream = new ObjectInputStream(b);
                         //UDPMessage message = (UDPMessage) stream.readObject();
-                        try {//no ha habido ganador
+                        if(msjRecibido.charAt(0) != '_') {//No ha habido ganador
                             topoID = Integer.parseInt(msjRecibido);
                             //System.out.println("hoyo:" + topoID);
                             if (topoID > 15) {
                                 topoID = r.nextInt(16);
                             }
                             Juego.creaTopo(topoID);
-                        }catch(Exception e){//truena el parseInt -- hay ganador
+                        }
+                        else {//Hubo ganador
                             Juego.score = 0;
                             showMessageDialog(null, "Gana " + msjRecibido);
-
+                            break;//esta línea salvó el semestre
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

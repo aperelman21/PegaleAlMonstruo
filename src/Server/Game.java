@@ -44,8 +44,8 @@ public class Game {
     }
 
     public void GameOver() throws IOException{
-        String myMessage = getPlayerMaxScore().getPlayerId();
-        System.out.println("Jugadro Ganador: " + myMessage);
+        String myMessage = "_" + getPlayerMaxScore().getPlayerId();
+        System.out.println("Jugador Ganador: " + myMessage);
         byte[] m = myMessage.getBytes();
         DatagramPacket messageOut =
                 new DatagramPacket(m, m.length, group, 49155);

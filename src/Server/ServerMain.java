@@ -49,6 +49,7 @@ public class ServerMain {
             //Checar si alguien ya gano
             maxPlayer = game.getPlayerMaxScore();
             if(maxPlayer.getPlayerScore()==maxScore) {
+                System.out.println("if game over");
                 game.GameOver();
                 game.resetScores();
             }
