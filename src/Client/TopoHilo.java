@@ -6,12 +6,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
+import java.util.Random;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class TopoHilo extends Thread {
 
     MulticastSocket socketUDP;
+    Random r = new Random();
 
     public TopoHilo(MulticastSocket socketUDP) {
         this.socketUDP = socketUDP;
@@ -38,7 +40,7 @@ public class TopoHilo extends Thread {
                             topoID = Integer.parseInt(msjRecibido);
                             //System.out.println("hoyo:" + topoID);
                             if (topoID > 15) {
-                                topoID = 15;
+                                topoID = r.nextInt(16);
                             }
                             Juego.creaTopo(topoID);
                         }catch(Exception e){//truena el parseInt -- hay ganador

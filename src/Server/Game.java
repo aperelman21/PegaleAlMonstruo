@@ -54,7 +54,7 @@ public class Game {
 
     public Player getPlayerMaxScore(){
         Player maxPlayer = null, currentPlayer = null;
-        int maxScore = 0, currentScore;
+        int maxScore = -1, currentScore;
         for (int i = 0; i < players.size(); i++) {
             currentPlayer = players.get(i);
             currentScore = currentPlayer.getPlayerScore();
@@ -109,6 +109,14 @@ public class Game {
                 player2.setPlayerScore(player1.getPlayerScore()+1);
                 players.set(i,player2);
             }
+        }
+    }
+
+    public void resetScores(){
+        for(int i=0;i< players.size();i++){
+            Player player = players.get(i);
+            player.setPlayerScore(0);
+            players.set(i,player);
         }
     }
 

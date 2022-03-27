@@ -40,20 +40,20 @@ public class ServerMain {
         Game game = servTCP.getGame();
         //Instanciar grupo multicast
         game.initialize();
-        boolean flag = true;
         Player maxPlayer;
         int maxScore = game.getMaxScore();
         //mientras nadie haya ganado, enviamos monstruos por multicast
-        while(flag){
+        while(true){
             game.sendMonster();
             Thread.sleep(1000);
             //Checar si alguien ya gano
             maxPlayer = game.getPlayerMaxScore();
             if(maxPlayer.getPlayerScore()==maxScore) {
-                flag = false;
+                game.GameOver();
+                game.resetScores();
             }
         }
         //Cuando alguien ya gano enviamos al ganador
-        game.GameOver();
+
     }//main
 }//class
