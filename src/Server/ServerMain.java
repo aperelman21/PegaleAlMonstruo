@@ -21,7 +21,7 @@ public class ServerMain {
         }//if
         //Desplegar servicio RMI
         try {
-            String serverAddress = "192.168.100.87";
+            String serverAddress = "localhost";
             System.setProperty("java.rmi.server.hostname", serverAddress);
 
             // start the rmi registry
@@ -35,6 +35,7 @@ public class ServerMain {
 
         //Instanciar servidor TCP y empezar el jeugo
         TCPServer servTCP = new TCPServer();
+        System.out.println(servTCP);
         servTCP.start();
         Game game = servTCP.getGame();
         //Instanciar grupo multicast

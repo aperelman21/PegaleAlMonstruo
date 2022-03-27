@@ -29,7 +29,7 @@ public class Juego extends JFrame {
     private ImageIcon topoOutImg = new ImageIcon(getClass().getResource("moleOut.png"));
     private static Icon topoInImgRedo;
     private static Icon topoOutImgRedo;
-    public int score;
+    public static int score;
     private Timer timer;
     private final int duracion = 30;
     private final int topoWidth = 132;
@@ -52,17 +52,6 @@ public class Juego extends JFrame {
         iniciaTimer();
     }
 
-    public Juego(String idPlayer){
-        this.player = new Player(idPlayer,0);
-        score = 0;
-        contadorTiempo = duracion;
-        init();
-        initConnection();
-        iniciaJuego();
-        iniciaTimer();
-        topoHilo = new TopoHilo(socketUDP);
-        topoHilo.start();
-    }
 
     public Juego(Player player,InfoPorts info) throws IOException {
         this.player = player;
@@ -143,7 +132,7 @@ public class Juego extends JFrame {
         try {
             String serverIP = this.info.getDirIP();
             int serverPort = this.info.getPortTCP();
-            socketTCP = new Socket(serverIP,serverPort);
+            socketTCP = new Socket("localhost",49152);
             out = new ObjectOutputStream(socketTCP.getOutputStream());
         }
         catch (Exception e) {
@@ -270,8 +259,5 @@ public class Juego extends JFrame {
 
     }
 
-    public static void main(String[] args) {
-        Juego juego = new Juego("Jugador1");
-        juego.setVisible(true);
-    }
+
 }

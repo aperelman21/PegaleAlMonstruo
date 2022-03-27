@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class SlaveNode implements LoginRMI {
     private String ip = "127.0.0.1";
-    private int portTCP = 7896;
+    private int portTCP = 49152;
     private int portUDP = 49155;
     private ArrayList<Player> jugadores;
 

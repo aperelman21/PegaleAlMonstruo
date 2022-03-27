@@ -7,6 +7,8 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
 
+import static javax.swing.JOptionPane.showMessageDialog;
+
 public class TopoHilo extends Thread {
 
     MulticastSocket socketUDP;
@@ -32,12 +34,18 @@ public class TopoHilo extends Thread {
                         //ByteArrayInputStream b = new ByteArrayInputStream(messageIn.getData());
                         //ObjectInputStream stream = new ObjectInputStream(b);
                         //UDPMessage message = (UDPMessage) stream.readObject();
-                        topoID = Integer.parseInt(msjRecibido);
-                        //System.out.println("hoyo:" + topoID);
-                        if (topoID > 15) {
-                            topoID = 15;
+                        try {//no ha habido ganador
+                            topoID = Integer.parseInt(msjRecibido);
+                            //System.out.println("hoyo:" + topoID);
+                            if (topoID > 15) {
+                                topoID = 15;
+                            }
+                            Juego.creaTopo(topoID);
+                        }catch(Exception e){//truena el parseInt -- hay ganador
+                            Juego.score = 0;
+                            showMessageDialog(null, "Gana " + msjRecibido);
+
                         }
-                        Juego.creaTopo(topoID);
                     } catch (Exception e) {
                         e.printStackTrace();
                     //} catch (ClassNotFoundException e) {
