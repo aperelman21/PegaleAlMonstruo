@@ -1,14 +1,9 @@
 package Server;
 
 import SerializableObjects.Player;
-import SerializableObjects.UDPMessage;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.net.*;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -28,7 +23,7 @@ public class Game {
 
     public void initialize(){
         try {
-            this.group = InetAddress.getByName("228.5.6.7"); //destination multicast group
+            this.group = Inet4Address.getByName("228.5.6.7"); //destination multicast group
             this.socket = new MulticastSocket(49155);
             this.socket.joinGroup(group);
 
@@ -68,16 +63,6 @@ public class Game {
 
     public void sendMonster() throws IOException {
         int hole = rand.nextInt(16);
-        /*UDPMessage message = new UDPMessage(hole,false,null);
-        ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-        ObjectOutputStream oos = null;
-        try {
-            oos = new ObjectOutputStream(bStream);
-            oos.writeObject(message);
-            System.out.println("Envio un mosnturo al hoyo: "+ hole);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
         String myMessage = Integer.toString(hole);
         System.out.println("Hoyo Enviado: " + hole);
         byte[] m = myMessage.getBytes();

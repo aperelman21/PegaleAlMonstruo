@@ -51,9 +51,9 @@ public class LoginClient extends JFrame{
 
         System.setProperty("java.security.policy", "src/client/client.policy");
 
-        if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new SecurityManager());
-        }
+        //if (System.getSecurityManager() == null) {
+          //  System.setSecurityManager(new SecurityManager());
+        //}
         try {
             //String serverAddress = "?.?.?.?";
             String serverAddress = "localhost";

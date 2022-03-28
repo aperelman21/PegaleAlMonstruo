@@ -1,7 +1,6 @@
 package Client;
 import SerializableObjects.InfoPorts;
 import SerializableObjects.Player;
-import SerializableObjects.UDPMessage;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -25,16 +24,14 @@ public class Juego extends JFrame {
     public static boolean tablero[] = new boolean[16];
     private JLabel lblScore;
     private JLabel lblTimeLeft;
-    private ImageIcon topoInImg = new ImageIcon(getClass().getResource("moleIn.png"));
-    private ImageIcon topoOutImg = new ImageIcon(getClass().getResource("moleOut.png"));
+    private ImageIcon topoInImg = new ImageIcon(getClass().getResource("grass.png"));
+    private ImageIcon topoOutImg = new ImageIcon(getClass().getResource("doge.jpeg"));
     private static Icon topoInImgRedo;
     private static Icon topoOutImgRedo;
     public static int score;
-    private Timer timer;
     private final int duracion = 30;
     private final int topoWidth = 132;
     private final int topoHeight = 132;
-    private int contadorTiempo;
     private ScheduledExecutorService executor;
     private Player player;
     private InfoPorts info;
@@ -44,32 +41,23 @@ public class Juego extends JFrame {
     private boolean juegoIniciado = true;
     private TopoHilo topoHilo;
 
-    public Juego() {
-        score = 0;
-        contadorTiempo = duracion;
-        init();
-        iniciaJuego();
-        iniciaTimer();
-    }
 
 
     public Juego(Player player,InfoPorts info) throws IOException {
         this.player = player;
         this.info = info;
         score = 0;
-        contadorTiempo = duracion;
         joinMultiCast(info.getPortUDP());
         init();
         initConnection();
         iniciaJuego();
-        // iniciaTimer();
         topoHilo = new TopoHilo(this.socketUDP);
         topoHilo.start();
     }
 
     public void joinMultiCast(int portUDP) throws IOException {
         try {
-            InetAddress group = InetAddress.getByName("228.5.6.7"); // destination multicast group
+            InetAddress group = Inet4Address.getByName("228.5.6.7"); // destination multicast group
             this.socketUDP = new MulticastSocket(portUDP);
             socketUDP.joinGroup(group);
         } catch (SocketException e) {
@@ -104,10 +92,10 @@ public class Juego extends JFrame {
         lblScore.setBounds(423, 54, 144, 33);
         contentPanel.add(lblScore);
 
-        lblTimeLeft = new JLabel("30");
+        lblTimeLeft = new JLabel(player.getPlayerId());
         lblTimeLeft.setHorizontalAlignment(SwingConstants.CENTER);
         lblTimeLeft.setForeground(new Color(240, 128, 128));
-        lblTimeLeft.setFont(new Font("Cambria Math", Font.BOLD, 24));
+        lblTimeLeft.setFont(new Font("Cambria", Font.BOLD, 24));
         lblTimeLeft.setBounds(232, 54, 144, 33);
         contentPanel.add(lblTimeLeft);
 
@@ -146,12 +134,6 @@ public class Juego extends JFrame {
         return new ImageIcon(resizedImage);
     }
 
-    public int creaRandTopo() {
-        int topoID = new Random(System.currentTimeMillis()).nextInt(16);
-        tablero[topoID] = true;
-        btnTopos[topoID].setIcon(topoOutImgRedo);
-        return topoID;
-    }
 
     public static int creaTopo(int topoID) {
         tablero[topoID] = true;
@@ -216,48 +198,12 @@ public class Juego extends JFrame {
         }
     }
 
-    private void gameOver() {
-        contadorTiempo = duracion;
-        executor.shutdown();
-        timer.cancel();
-        for (int i=0; i<btnTopos.length; i++) {
-            btnTopos[i].setIcon(topoInImgRedo);
-        }
-        juegoIniciado = false;
-    }
 
     public static void limpiaTopo(int topoID) {
         tablero[topoID] = false;
         btnTopos[topoID].setIcon(topoInImgRedo);
     }
 
-    private void iniciaTimer() {
-        Runnable topoTask = new Runnable() {
-            int topoID = -1;
-            public void run() {
-                if (topoID != -1) {
-                    limpiaTopo(topoID);
-                }
-                topoID = creaRandTopo();
-            }
-        };
-        executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(topoTask, 0, 1000, TimeUnit.MILLISECONDS);
-
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                --contadorTiempo;
-                lblTimeLeft.setText(String.valueOf(contadorTiempo));
-                if (contadorTiempo == 0) {
-                    gameOver();
-                }
-            }
-        };
-        timer = new Timer();
-        timer.schedule(timerTask, 0,1000);
-
-    }
 
 
 }
