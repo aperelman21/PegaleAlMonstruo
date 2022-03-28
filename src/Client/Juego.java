@@ -93,9 +93,6 @@ public class Juego extends JFrame {
         lblScore.setBounds(423, 54, 144, 33);
         contentPanel.add(lblScore);
 
-        btnSalir = new JButton("Salir");
-        btnSalir.setBounds(200,54,144,33);
-        contentPanel.add(btnSalir);
 
         lblTimeLeft = new JLabel(player.getPlayerId());
         lblTimeLeft.setHorizontalAlignment(SwingConstants.CENTER);
@@ -201,44 +198,7 @@ public class Juego extends JFrame {
 
             });
         }
-        btnSalir.addMouseListener(new MouseListener() {
 
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                try {
-                    socketTCP.close();
-                    dispose();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-        });
     }
 
 
@@ -247,11 +207,5 @@ public class Juego extends JFrame {
         btnTopos[topoID].setIcon(topoInImgRedo);
     }
 
-    public static void main(String[] args) throws IOException {
-        Player player = new Player("Miguel",0);
-        InfoPorts ip = new InfoPorts(79797,97969,"localhost");
-        Juego juego = new Juego(player,ip);
-        juego.setVisible(true);
-    }
 
 }

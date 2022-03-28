@@ -68,7 +68,7 @@ class Connection extends Thread {
             Player player;
             while(true){
                 player = (Player) in.readObject();
-                System.out.println(player.getPlayerId());
+                System.out.println("jugador le pego al monstruo: "+ player.getPlayerId() +" score: "+player.getPlayerScore());
                 game.updateScore(player);
             }//while
         }//try

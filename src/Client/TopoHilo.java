@@ -32,9 +32,6 @@ public class TopoHilo extends Thread {
                         }
                         String msjRecibido = new String(messageIn.getData()).trim();
                         System.out.println("Message: " + msjRecibido);
-                        //ByteArrayInputStream b = new ByteArrayInputStream(messageIn.getData());
-                        //ObjectInputStream stream = new ObjectInputStream(b);
-                        //UDPMessage message = (UDPMessage) stream.readObject();
                         if(msjRecibido.charAt(0) != '_') {//No ha habido ganador
                             topoID = Integer.parseInt(msjRecibido);
                             //System.out.println("hoyo:" + topoID);
